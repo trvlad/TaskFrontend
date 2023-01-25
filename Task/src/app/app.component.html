@@ -1,0 +1,102 @@
+<div>
+<div class="maindiv" *ngIf="!isFormHide">
+  <div class="title">Напишите нам</div>
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="elemformdiv">
+      <label>Ваше имя:</label>
+      <input class="iconName" type="text" placeholder="Имя" formControlName="name">
+      <div *ngIf="form.get('name')!.invalid && form.get('name')!.touched" class="validation">
+        <small class="smalerror">
+          Поле имя не может быть пустым
+        </small>
+      </div>
+    </div>
+
+    <div class="elemformdiv">
+      <label>Ваш Email:</label>
+      <input class="iconEmail" type="text" placeholder="Email" formControlName="email">
+      <div *ngIf="form.get('email')!.invalid && form.get('email')!.touched" class="validation">
+        <small class="smalerror" *ngIf="form.get('email')!.errors!['required']">
+          Поле Email не может быть пустым
+        </small>
+        <small class="smalerror" *ngIf="form.get('email')!.errors!['email']">
+          Введите коректный Email
+        </small>
+      </div>
+    </div>
+
+    <div class="elemformdiv">
+      <label>Ваш телефон:</label>
+      <input class="iconPhone" [imask]="phoneMask" type="text" placeholder="+7(000)000-00-00" formControlName="phone">
+      <div *ngIf="form.get('phone')!.invalid && form.get('phone')!.touched" class="validation">
+        <small class="smalerror" *ngIf="form.get('phone')!.errors!['required']">
+          Поле телефон не может быть пустым
+        </small>
+        <small class="smalerror" *ngIf="form.get('phone')!.errors!['minlength']">
+          Введите коректный телефон
+        </small>
+      </div>
+    </div>
+
+    <div class="elemformdiv">
+      <label>Тема:</label>
+      <select formControlName="theme">
+        <option *ngFor="let theme of themes" [ngValue]="theme">
+          {{theme.theme}}
+        </option>
+        <option value="newTheme">-Добавить свою тему-</option>
+      </select>
+      <div *ngIf="form.get('theme')?.value=='newTheme'">
+        <input type="text" placeholder="Ваша тема" formControlName="newTheme">
+        <div *ngIf="form.get('theme')!.invalid && form.get('theme')!.touched" class="validation">
+          <small class="smalerror">
+            Поле тема не может быть пустым
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="elemformdiv">
+      <label>Ваше<br>сообщение:</label>
+      <textarea name="message" id="" cols="45" rows="5" placeholder="Максимальный размер сообщения 300 символов"
+        formControlName="message" maxlength="300">
+      </textarea>
+      <div *ngIf="form.get('message')!.invalid && form.get('message')!.touched" class="validation">
+        <small class="smalerror" *ngIf="form.get('message')!.errors!['required']">
+          Поле Cообщение не может быть пустым
+        </small>
+      </div>
+    </div>
+
+    <div class="elemformdiv">
+      <ngx-recaptcha2 class="recaptchadiv" #captchaElem [siteKey]="siteKey" formControlName="recaptcha">
+      </ngx-recaptcha2>
+      <script
+        src="https://www.google.com/recaptcha/enterprise.js?render=6Lffk_0jAAAAAM1_G-aW3q0IHEtg6LwC01Pyaj4m"></script>
+      <script>
+        grecaptcha.enterprise.ready(function () {
+          grecaptcha.enterprise.execute('6Lffk_0jAAAAAM1_G-aW3q0IHEtg6LwC01Pyaj4m', { action: 'login' }).then(function (token) { });
+        });
+      </script>
+    </div>
+    
+    <button class="btn" type="submit" [disabled]="form.invalid">Отправить письмо!</button>
+
+  </form>
+</div>
+
+
+<div class="maindiv" *ngIf="isFormHide && currentMessage">
+  <h1>Вы ввели</h1>
+  <label>Имя: </label>
+  <label> {{currentMessage.user.name}} </label><br>
+  <label>Email: </label>
+  <label> {{currentMessage.user.email}} </label><br>
+  <label>Телефон: </label>
+  <label> {{currentMessage.user.phone}} </label><br>
+  <label>Тема: </label>
+  <label> {{currentMessage.themeName}} </label><br>
+  <label>Сообщение: </label>
+  <label> {{currentMessage.messageText}} </label>
+</div>
+</div>
